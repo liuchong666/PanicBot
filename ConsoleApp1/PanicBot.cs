@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Linq;
 
 namespace ConsoleApp1
 {
@@ -18,7 +19,7 @@ namespace ConsoleApp1
             _httpClientFactory = httpClientFactory;
         }
 
-        public string Login(string userName, string password)
+        public (string, long) Login(string userName, string password)
         {
             var client = _httpClientFactory.CreateClient();
             var user = new { name = userName, password = password };
@@ -40,11 +41,97 @@ namespace ConsoleApp1
                 Console.WriteLine($"登录请求失败：{result.message}");
             }
 
-            var token = result.data.token;
+            var token = result.data.token.Value;
             httpContent.Dispose();
 
-            Console.WriteLine($"用户：{userName}登录成功");
-            return token;
+            Console.WriteLine($"用户：{userName}登录成功{DateTime.Now}\r\n");
+            return (token, result.data.id.Value);
+        }
+
+        public int GetSessionList(string token)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Authorization", token);
+            var resultAuth = client.GetAsync($"http://api.muyunzhaig.com/rotation/rotationList").Result;
+            if (resultAuth.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                _logger.LogError(resultAuth.Content.ReadAsStringAsync().Result);
+                Console.WriteLine($"获取Session请求失败{resultAuth.StatusCode}");
+            }
+
+            var resultStr = resultAuth.Content.ReadAsStringAsync().Result;
+            var result = JsonConvert.DeserializeObject<dynamic>(resultStr);
+            if (result.code != 0)
+            {
+                _logger.LogError(resultStr);
+                Console.WriteLine($"获取Session请求失败：{result.message}");
+            }
+
+            var startTimeValue = "";
+            if ((DateTime.Now.Hour > 11) && (DateTime.Now.Hour < 15))
+                startTimeValue = "15:00";
+            else
+            {
+                startTimeValue = "11:00";
+            }
+
+            var startTime = result.data.sessionList[0].startTime.Value;
+            if (startTimeValue == startTime)
+                return result.data.sessionList[0].id;
+
+            return result.data.sessionList[1].id;
+        }
+
+        public (List<Goods>, string) GetList(string token, int sessionId, int page, List<Goods> list, User user)
+        {
+            var msg = "当前共有{0}件商品，筛选后可抢商品为：{1}件\r\n";
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Authorization", token);
+            var resultAuth = client.GetAsync($"http://api.muyunzhaig.com/sg/getList/{sessionId}/{page}/12?null").Result;
+            if (resultAuth.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                _logger.LogError(resultAuth.Content.ReadAsStringAsync().Result);
+                Console.WriteLine($"获取商品列表请求失败{resultAuth.StatusCode}");
+            }
+
+            var resultStr = resultAuth.Content.ReadAsStringAsync().Result;
+            var result = JsonConvert.DeserializeObject<dynamic>(resultStr);
+            if (result.code != 0)
+            {
+                _logger.LogError(resultStr);
+                Console.WriteLine($"获取Session请求失败：{result.message}");
+            }
+
+            var records = result.data.totalRecords.Value;
+            var pages = result.data.totalPages.Value;
+
+
+            foreach (var item in result.data.currentList)
+            {
+                var id = item.id.Value;
+                var goodsName = item.goodName.Value;
+                var goodsPrice = item.goodPrice;
+                var userId = item.userId.Value;
+
+                Goods goods = new Goods()
+                {
+                    GoodBuyPrice = goodsPrice,
+                    GoodName = goodsName,
+                    Id = id,
+                    UserId = userId
+                };
+                list.Add(goods);
+            }
+
+            if (page < pages)
+            {
+                GetList(token, sessionId, page + 1, list, user);
+            }
+
+            list = list.Where(c => c.GoodBuyPrice > user.DlowP && c.GoodBuyPrice <= user.DupP && c.UserId != user.Id).ToList();
+            msg = string.Format(msg, records, list.Count);
+
+            return (list, msg);
         }
     }
 }

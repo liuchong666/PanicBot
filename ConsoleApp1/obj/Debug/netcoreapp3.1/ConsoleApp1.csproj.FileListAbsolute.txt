@@ -23,3 +23,9 @@ C:\Users\admin\source\repos\WebApplication4\ConsoleApp1\obj\Debug\netcoreapp3.1\
 C:\Users\admin\source\repos\WebApplication4\ConsoleApp1\obj\Debug\netcoreapp3.1\ConsoleApp1.pdb
 C:\Users\admin\source\repos\WebApplication4\ConsoleApp1\obj\Debug\netcoreapp3.1\ConsoleApp1.genruntimeconfig.cache
 C:\Users\admin\source\repos\WebApplication4\ConsoleApp1\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Users\admin\source\repos\WebApplication4\ConsoleApp1\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.FileExtensions.dll
+C:\Users\admin\source\repos\WebApplication4\ConsoleApp1\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Configuration.Json.dll
+C:\Users\admin\source\repos\WebApplication4\ConsoleApp1\bin\Debug\netcoreapp3.1\Microsoft.Extensions.FileProviders.Abstractions.dll
+C:\Users\admin\source\repos\WebApplication4\ConsoleApp1\bin\Debug\netcoreapp3.1\Microsoft.Extensions.FileProviders.Physical.dll
+C:\Users\admin\source\repos\WebApplication4\ConsoleApp1\bin\Debug\netcoreapp3.1\Microsoft.Extensions.FileSystemGlobbing.dll
+C:\Users\admin\source\repos\WebApplication4\ConsoleApp1\bin\Debug\netcoreapp3.1\config.json
