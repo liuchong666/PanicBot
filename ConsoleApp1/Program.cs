@@ -12,33 +12,9 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            var build = new ConfigurationBuilder();
-            build.SetBasePath(Directory.GetCurrentDirectory());
-            build.AddJsonFile("config.json", true, true);
-            var config = build.Build();
-            var name = config["name"];
-            var password = config["password"];
-            var dprice = decimal.Parse(config["DlowP"]);
-            var uprice = decimal.Parse(config["DupP"]);
-            var count = int.Parse(config["Count"]);
+            var user = Config.ConfigInit();
 
-            User user = new User
-            {
-                Name = name,
-                Password = password,
-                DlowP = dprice,
-                DupP = uprice,
-                Count = count
-            };
-
-            var serviceProvider = new ServiceCollection()
-                .AddHttpClient()
-                .AddLogging()
-                .AddScoped(typeof(PanicBot))
-                .BuildServiceProvider();
-
-            var panicBot = serviceProvider
-                 .GetService<PanicBot>();
+            var panicBot = Config.ServiceInit();
 
             var token = panicBot.Login(user.Name, user.Password);
             user.Token = token.Item1;
@@ -47,7 +23,7 @@ namespace ConsoleApp1
             var sessionId = panicBot.GetSessionList(user.Token);
 
             List<Goods> list = new List<Goods>();
-            var allGoods=panicBot.GetList(user.Token, sessionId, 1, list,user);
+            var allGoods = panicBot.GetList(user.Token, sessionId, 1, list, user);
             Console.WriteLine(allGoods.Item2);
 
             int minuteValue = 50;
@@ -72,7 +48,7 @@ namespace ConsoleApp1
                 }
             }
 
-            
+
 
             Console.ReadKey();
         }
