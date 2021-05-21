@@ -20,12 +20,6 @@ namespace ConsoleApp1
             user.Token = token.Item1;
             user.Id = token.Item2;
 
-            var sessionId = panicBot.GetSessionList(user.Token);
-
-            List<Goods> list = new List<Goods>();
-            var allGoods = panicBot.GetList(user.Token, sessionId, 1, list, user);
-            Console.WriteLine(allGoods.Item2);
-
             int minuteValue = 50;
             int secondValue = 50;
             while (true)
@@ -48,7 +42,60 @@ namespace ConsoleApp1
                 }
             }
 
+            var sessionId = panicBot.GetSessionList(user.Token);
 
+            List<Goods> list = new List<Goods>();
+            var allGoods = panicBot.GetList(user.Token, sessionId, 1, list, user);
+            Console.WriteLine(allGoods.Item2);
+            
+            while (true)
+            {
+                int hour = DateTime.Now.Hour;
+                int minute = DateTime.Now.Minute;
+                int second = DateTime.Now.Second;
+                if ((hour == 10 || hour == 14) && minute > 55 && second > 54)
+                {
+                    break;
+                }
+
+                Console.WriteLine($"当前时间为 {hour}时{minute}分{second}秒, 在{hour}:56:54开启抢购商品!\r\n");
+                Thread.Sleep(1000);
+            }
+
+            bool resultF=false;
+            int i = 0;
+            do
+            {
+                if (i >= list.Count)
+                {
+                    Console.WriteLine("商品已抢购完，无可抢商品！");
+                    break;
+                }
+
+                long goodsId = list[i].Id;
+                Console.WriteLine($"开始抢购商品：{list[i].GoodName}");
+
+                var goods = panicBot.GetGoods(user.Token, goodsId);
+                if (goods.GoodsState != 0&&goods.IsSale)
+                {
+                    i++;
+                    continue;
+                }
+
+                var result = panicBot.DoOrder(user.Token, goodsId);
+                resultF = result.Item1;
+                if (resultF)
+                {
+                    Console.WriteLine("抢购成功！");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine($"抢购失败：{result.Item2}");
+                    i++;
+                }
+                Thread.Sleep(300);
+            } while (!resultF);
 
             Console.ReadKey();
         }

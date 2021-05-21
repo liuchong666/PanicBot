@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace WebApplication4
@@ -25,7 +27,14 @@ namespace WebApplication4
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddHttpClient();
+            services.AddHttpClient("").ConfigurePrimaryHttpMessageHandler(()=> {
+               
+                return new HttpClientHandler
+                {
+                    Proxy = new WebProxy("http://127.0.0.1:8889"),
+                    UseProxy = true
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

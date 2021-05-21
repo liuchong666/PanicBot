@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Linq;
+using System.Net;
 
 namespace ConsoleApp1
 {
@@ -26,6 +27,7 @@ namespace ConsoleApp1
 
             HttpContent httpContent = new StringContent(JsonConvert.SerializeObject(user));
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
             var resultAuth = client.PostAsync($"http://api.muyunzhaig.com/user/login/?null", httpContent).Result;//.Content.ReadAsStringAsync().Result/*.JsonDeserialize<dynamic>()*/;
             if (resultAuth.StatusCode != System.Net.HttpStatusCode.OK)
             {
@@ -132,6 +134,55 @@ namespace ConsoleApp1
             msg = string.Format(msg, records, list.Count);
 
             return (list, msg);
+        }
+
+        public Goods GetGoods(string token, long goodsId)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Authorization", token);
+            var resultAuth = client.GetAsync($"http://api.muyunzhaig.com/sg/getSgInfo/{goodsId}?nul").Result;
+            if (resultAuth.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                _logger.LogError(resultAuth.Content.ReadAsStringAsync().Result);
+                Console.WriteLine($"获取商品详情请求失败{resultAuth.StatusCode}");
+            }
+
+            var resultStr = resultAuth.Content.ReadAsStringAsync().Result;
+            var result = JsonConvert.DeserializeObject<dynamic>(resultStr);
+            if (result.code == 0)
+            {
+                Goods goods = new Goods
+                {
+                    IsSale = result.data.isSale,
+                    GoodsState = result.data.goodState,
+                };
+
+                return goods;
+            }
+
+            return null;
+        }
+
+        public (bool, string) DoOrder(string token, long goodsId)
+        {
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Add("Authorization", token);
+            var resultAuth = client.GetAsync($"http://api.muyunzhaig.com/order/createOrder/{goodsId}?null").Result;
+            if (resultAuth.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                _logger.LogError(resultAuth.Content.ReadAsStringAsync().Result);
+                Console.WriteLine($"下单请求失败{resultAuth.StatusCode}");
+            }
+
+            var resultStr = resultAuth.Content.ReadAsStringAsync().Result;
+            var result = JsonConvert.DeserializeObject<dynamic>(resultStr);
+            if (result.code == 0)
+            {
+                Console.WriteLine($"抢购成功");
+                return (true, "");
+            }
+
+            return (false, result.message.Value);
         }
     }
 }

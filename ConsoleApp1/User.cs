@@ -36,5 +36,9 @@ namespace ConsoleApp1
         public string GoodName { get; set; }
 
         public long UserId { get; set; }
+
+        public int GoodsState { get; set; }
+
+        public bool IsSale { get; set; }
     }
 }
