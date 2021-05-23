@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -9,11 +9,19 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.15" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.15" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="3.1.15" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.15" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="3.1.15" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.1.15" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NLog" Version="4.7.10" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="1.7.2" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="nlog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -56,6 +56,26 @@
               "target": "Package",
               "version": "[3.1.15, )"
             },
+            "Microsoft.Extensions.Logging": {
+              "target": "Package",
+              "version": "[3.1.15, )"
+            },
+            "Microsoft.Extensions.Logging.Configuration": {
+              "target": "Package",
+              "version": "[3.1.15, )"
+            },
+            "Microsoft.Extensions.Logging.Console": {
+              "target": "Package",
+              "version": "[3.1.15, )"
+            },
+            "NLog": {
+              "target": "Package",
+              "version": "[4.7.10, )"
+            },
+            "NLog.Extensions.Logging": {
+              "target": "Package",
+              "version": "[1.7.2, )"
+            },
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.1, )"

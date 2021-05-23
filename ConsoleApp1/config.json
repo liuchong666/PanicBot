@@ -1,7 +1,15 @@
 {
-  "name": "13813900552",
-  "password": "19880825WK",
-  "DlowP": 10000,
-  "DupP": 20000,
-  "Count": 1
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  },
+  "name": "13699285614",
+  "password": "mima123456",
+  "DlowP": 8000,
+  "DupP": 8999,
+  "Count": 1,
+  "MinuteValue": 51
 }

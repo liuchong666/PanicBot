@@ -12,6 +12,7 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
+            
             var user = Config.ConfigInit();
 
             var panicBot = Config.ServiceInit();
@@ -20,7 +21,13 @@ namespace ConsoleApp1
             user.Token = token.Item1;
             user.Id = token.Item2;
 
-            int minuteValue = 50;
+            //var sessionId = panicBot.GetSessionList(user.Token);
+
+            //List<Goods> list = new List<Goods>();
+            //var allGoods = panicBot.GetList(user.Token, sessionId, 1, list, user);
+            //Console.WriteLine(allGoods.Item2);
+
+            int minuteValue = ConfigModel.MinuteValue-1;
             int secondValue = 50;
             while (true)
             {
@@ -47,7 +54,7 @@ namespace ConsoleApp1
             List<Goods> list = new List<Goods>();
             var allGoods = panicBot.GetList(user.Token, sessionId, 1, list, user);
             Console.WriteLine(allGoods.Item2);
-            
+            Random random = new Random();
             while (true)
             {
                 int hour = DateTime.Now.Hour;
@@ -63,24 +70,24 @@ namespace ConsoleApp1
             }
 
             bool resultF=false;
-            int i = 0;
+            int i = random.Next(0, allGoods.Item1.Count);
             do
             {
-                if (i >= list.Count)
+                if (allGoods.Item1.Count<=0)
                 {
                     Console.WriteLine("商品已抢购完，无可抢商品！");
                     break;
                 }
 
-                long goodsId = list[i].Id;
-                Console.WriteLine($"开始抢购商品：{list[i].GoodName}");
+                long goodsId = allGoods.Item1[i].Id;
+                Console.WriteLine($"开始抢购商品：{allGoods.Item1[i].GoodName}-{DateTime.Now.ToString("yyyy-MM-dd hh mm ss fff")}");
 
-                var goods = panicBot.GetGoods(user.Token, goodsId);
-                if (goods.GoodsState != 0&&goods.IsSale)
-                {
-                    i++;
-                    continue;
-                }
+                //var goods = panicBot.GetGoods(user.Token, goodsId);
+                //if (goods.GoodsState != 0&&goods.IsSale)
+                //{
+                //    i++;
+                //    continue;
+                //}
 
                 var result = panicBot.DoOrder(user.Token, goodsId);
                 resultF = result.Item1;
@@ -92,7 +99,11 @@ namespace ConsoleApp1
                 else
                 {
                     Console.WriteLine($"抢购失败：{result.Item2}");
-                    i++;
+                    if (result.Item2 != "未开场")
+                    {
+                        allGoods.Item1.RemoveAt(i);
+                        i = random.Next(0, allGoods.Item1.Count);
+                    }
                 }
                 Thread.Sleep(300);
             } while (!resultF);
