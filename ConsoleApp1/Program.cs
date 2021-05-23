@@ -12,7 +12,7 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            
+
             var user = Config.ConfigInit();
 
             var panicBot = Config.ServiceInit();
@@ -24,56 +24,26 @@ namespace ConsoleApp1
             //var sessionId = panicBot.GetSessionList(user.Token);
 
             //List<Goods> list = new List<Goods>();
-            //var allGoods = panicBot.GetList(user.Token, sessionId, 1, list, user);
-            //Console.WriteLine(allGoods.Item2);
+            //var allGoods1 = panicBot.GetList(user.Token, sessionId, 1, list, user);
+            //Console.WriteLine(allGoods1.Item2);
 
-            int minuteValue = ConfigModel.MinuteValue-1;
-            int secondValue = 50;
-            while (true)
-            {
-                int hour = DateTime.Now.Hour;
-                int minute = DateTime.Now.Minute;
-                if ((hour == 10 || hour == 14) && minute > minuteValue)
-                {
-                    break;
-                }
+            WaitForGetAllGoods();
 
-                Console.WriteLine($"当前时间为 {DateTime.Now.Hour}时{DateTime.Now.Minute}分{DateTime.Now.Second}秒, 在10:{minuteValue + 1}或14:{minuteValue + 1}开启拉取商品!\r\n");
-                if ((hour == 10 || hour == 14) && minute >= minuteValue && DateTime.Now.Second >= secondValue)
-                {
-                    Thread.Sleep(1000);
-                }
-                else
-                {
-                    Thread.Sleep(10000);
-                }
-            }
+            (List<Goods>, string) allGoods = WaitForDoOrder(user, panicBot);
 
-            var sessionId = panicBot.GetSessionList(user.Token);
+            BeginDoOrder(user, panicBot, allGoods);
 
-            List<Goods> list = new List<Goods>();
-            var allGoods = panicBot.GetList(user.Token, sessionId, 1, list, user);
-            Console.WriteLine(allGoods.Item2);
+            Console.ReadKey();
+        }
+
+        private static void BeginDoOrder(User user, PanicBot panicBot, (List<Goods>, string) allGoods)
+        {
             Random random = new Random();
-            while (true)
-            {
-                int hour = DateTime.Now.Hour;
-                int minute = DateTime.Now.Minute;
-                int second = DateTime.Now.Second;
-                if ((hour == 10 || hour == 14) && minute > 55 && second > 54)
-                {
-                    break;
-                }
-
-                Console.WriteLine($"当前时间为 {hour}时{minute}分{second}秒, 在{hour}:56:54开启抢购商品!\r\n");
-                Thread.Sleep(1000);
-            }
-
-            bool resultF=false;
+            bool resultF = false;
             int i = random.Next(0, allGoods.Item1.Count);
             do
             {
-                if (allGoods.Item1.Count<=0)
+                if (allGoods.Item1.Count <= 0)
                 {
                     Console.WriteLine("商品已抢购完，无可抢商品！");
                     break;
@@ -107,8 +77,56 @@ namespace ConsoleApp1
                 }
                 Thread.Sleep(300);
             } while (!resultF);
+        }
 
-            Console.ReadKey();
+        private static (List<Goods>, string) WaitForDoOrder(User user, PanicBot panicBot)
+        {
+            var sessionId = panicBot.GetSessionList(user.Token);
+
+            List<Goods> list = new List<Goods>();
+            var allGoods = panicBot.GetList(user.Token, sessionId, 1, list, user);
+            Console.WriteLine(allGoods.Item2);
+
+            while (true)
+            {
+                int hour = DateTime.Now.Hour;
+                int minute = DateTime.Now.Minute;
+                int second = DateTime.Now.Second;
+                if ((hour == 10 || hour == 14) && minute > 55 && second > 54)
+                {
+                    break;
+                }
+
+                Console.WriteLine($"当前时间为 {hour}时{minute}分{second}秒, 在{hour}:56:54开启抢购商品!\r\n");
+                Thread.Sleep(1000);
+            }
+
+            return allGoods;
+        }
+
+        private static void WaitForGetAllGoods()
+        {
+            int minuteValue = ConfigModel.MinuteValue - 1;
+            int secondValue = 50;
+            while (true)
+            {
+                int hour = DateTime.Now.Hour;
+                int minute = DateTime.Now.Minute;
+                if ((hour == 10 || hour == 14) && minute > minuteValue)
+                {
+                    break;
+                }
+
+                Console.WriteLine($"当前时间为 {DateTime.Now.Hour}时{DateTime.Now.Minute}分{DateTime.Now.Second}秒, 在10:{minuteValue + 1}或14:{minuteValue + 1}开启拉取商品!\r\n");
+                if ((hour == 10 || hour == 14) && minute >= minuteValue && DateTime.Now.Second >= secondValue)
+                {
+                    Thread.Sleep(1000);
+                }
+                else
+                {
+                    Thread.Sleep(10000);
+                }
+            }
         }
     }
 }

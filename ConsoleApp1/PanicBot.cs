@@ -93,7 +93,7 @@ namespace ConsoleApp1
 
         public (List<Goods>, string) GetList(string token, int sessionId, int page, List<Goods> list, User user)
         {
-            //sessionId = 39;
+            sessionId = 39;
             var msg = "当前共有{0}件商品，筛选后可抢商品为：{1}件\r\n";
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", token);
