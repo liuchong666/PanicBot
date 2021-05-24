@@ -14,7 +14,7 @@ namespace ConsoleApp2
             ThreadPool.GetAvailableThreads(out int at, out int aot);
             //ThreadPool.GetMaxThreads(out int mt, out int mot);
 
-            Parallel.For(1, 60, async i =>
+            Parallel.For(1, 2, async i =>
             {
                 Console.WriteLine(string.Format("{0}:第{1}个线程{2}", DateTime.Now.ToString("yyyy-MM-dd:hh mm ss fff"), i.ToString(), Thread.CurrentThread.ManagedThreadId));
                 await Task.Delay(5000);
