@@ -10,6 +10,7 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             var logger = LogManager.GetCurrentClassLogger();
+            logger.Info("程序启动");
             while (true)
             {
                 User user;
@@ -18,14 +19,6 @@ namespace ConsoleApp1
                 {
                     if ((DateTime.Now.Hour == 10 || DateTime.Now.Hour == 14) && DateTime.Now.Minute > 45)
                     {
-                        //user = Config.ConfigInit();
-
-                        //panicBot = Config.ServiceInit();
-
-                        //var token = panicBot.Login(user.Name, user.Password);
-                        //user.Token = token.Item1;
-                        //user.Id = token.Item2;
-
                         break;
                     }
                     else
@@ -61,13 +54,13 @@ namespace ConsoleApp1
                 (List<Goods>, string) allGoods = WaitForDoOrder(user, panicBot);
                 logger.Info(allGoods.Item2);
 
-                BeginDoOrder(user, panicBot, allGoods);
+                BeginDoOrder(user, panicBot, allGoods,logger);
 
                 Thread.Sleep(5*60*1000);
             }
         }
 
-        private static void BeginDoOrder(User user, PanicBot panicBot, (List<Goods>, string) allGoods)
+        private static void BeginDoOrder(User user, PanicBot panicBot, (List<Goods>, string) allGoods,Logger logger)
         {
             Random random = new Random();
             bool resultF = false;
@@ -94,6 +87,7 @@ namespace ConsoleApp1
                 resultF = result.Item1;
                 if (resultF)
                 {
+                    logger.Info($"用户：{user.Name}抢购商品：{allGoods.Item1[i].GoodName}成功");
                     Console.WriteLine("抢购成功！\r\n");
                     break;
                 }
