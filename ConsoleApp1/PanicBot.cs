@@ -93,8 +93,8 @@ namespace ConsoleApp1
 
         public (List<Goods>, string) GetList(string token, int sessionId, int page, List<Goods> list, User user)
         {
-            sessionId = 39;
-            var msg = "当前共有{0}件商品，筛选后可抢商品为：{1}件\r\n";
+            //sessionId = 39;
+            var msg = "当前共有{0}件商品，价格范围在{2}元-{3}元筛选后可抢商品为：{1}件\r\n";
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("Authorization", token);
             var resultAuth = client.GetAsync($"http://api.muyunzhaig.com/sg/getList/{sessionId}/{page}/12?null").Result;
@@ -109,7 +109,7 @@ namespace ConsoleApp1
             if (result.code != 0)
             {
                 _logger.LogError(resultStr);
-                Console.WriteLine($"获取Session请求失败：{result.message}");
+                Console.WriteLine($"获取商品列表请求失败：{result.message}");
             }
 
             var records = result.data.totalRecords.Value;
@@ -138,10 +138,10 @@ namespace ConsoleApp1
                 GetList(token, sessionId, page + 1, list, user);
             }
 
-            list = list.Where(c => c.GoodBuyPrice > user.DlowP && c.GoodBuyPrice <= user.DupP && c.UserId != user.Id).ToList();
-            msg = string.Format(msg, records, list.Count);
+            list = list.Where(c => c.GoodBuyPrice >= user.DlowP && c.GoodBuyPrice <= user.DupP && c.UserId != user.Id).ToList();
+            msg = string.Format(msg, records, list.Count,user.DlowP,user.DupP);
             
-            _logger.LogInformation($"共获取{records}件商品，获取可抢商品{list.Count}件-{DateTime.Now}\r\n");
+            //_logger.LogInformation(msg);
 
             return (list, msg);
         }
@@ -181,14 +181,14 @@ namespace ConsoleApp1
             if (resultAuth.StatusCode != System.Net.HttpStatusCode.OK)
             {
                 _logger.LogError(resultAuth.Content.ReadAsStringAsync().Result);
-                Console.WriteLine($"下单请求失败{resultAuth.StatusCode}");
+                Console.WriteLine($"下单请求失败{resultAuth.StatusCode}\r\n");
             }
 
             var resultStr = resultAuth.Content.ReadAsStringAsync().Result;
             var result = JsonConvert.DeserializeObject<dynamic>(resultStr);
             if (result.code == 0)
             {
-                Console.WriteLine($"抢购成功");
+                Console.WriteLine($"抢购成功\r\n");
                 return (true, "");
             }
 

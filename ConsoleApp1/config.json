@@ -2,14 +2,14 @@
   "Logging": {
     "LogLevel": {
       "Default": "Debug",
-      "System": "Information",
-      "Microsoft": "Information"
+      "System": "Error",
+      "Microsoft": "Error"
     }
   },
   "name": "13699285614",
   "password": "mima123456",
-  "DlowP": 8000,
-  "DupP": 8999,
+  "DlowP": 8500,
+  "DupP": 9500,
   "Count": 1,
   "MinuteValue": 51
 }
