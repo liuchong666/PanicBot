@@ -93,6 +93,7 @@ namespace ConsoleApp1
                 }
                 else
                 {
+                    logger.Info($"用户：{user.Name}抢购商品：{allGoods.Item1[i].GoodName}失败,原因：{result.Item2}");
                     Console.WriteLine($"抢购失败：{result.Item2}\r\n");
                     if (result.Item2 != "未开场")
                     {
@@ -117,12 +118,12 @@ namespace ConsoleApp1
                 int hour = DateTime.Now.Hour;
                 int minute = DateTime.Now.Minute;
                 int second = DateTime.Now.Second;
-                if ((hour == 10 || hour == 14) && minute > 55 && second > 54)
+                if ((hour == 10 || hour == 14) && minute > 55 && second > 58)
                 {
                     break;
                 }
 
-                Console.WriteLine($"当前时间为 {hour}时{minute}分{second}秒, 在{hour}:56:54开启抢购商品!\r\n");
+                Console.WriteLine($"当前时间为 {hour}时{minute}分{second}秒, 在{hour}:56:59开启抢购商品!\r\n");
                 Thread.Sleep(1000);
             }
 
