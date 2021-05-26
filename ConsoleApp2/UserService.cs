@@ -17,7 +17,7 @@ namespace ConsoleApp2
 
         public List<long> GoodsIds { get; set; }
 
-        public string Test(IHttpClientFactory httpClientFactory)
+        public string Login(IHttpClientFactory httpClientFactory)
         {
             var client = httpClientFactory.CreateClient();
             var user = new { name = UserInfo.Name, password = UserInfo.Password };
