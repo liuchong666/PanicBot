@@ -25,7 +25,7 @@ namespace ConsoleApp2
         public static IServiceCollection ServiceInit()
         {
             IServiceCollection connection = new ServiceCollection()
-                .AddHttpClient()
+                //.AddHttpClient()
                 .AddLogging(loggingBuilder =>
                 {
                     //loggingBuilder.AddConfiguration(configuration.GetSection("Logging"));
@@ -34,14 +34,9 @@ namespace ConsoleApp2
                     ////loggingBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Debug);
                     //loggingBuilder.AddNLog(configuration);
                 })
-                //.AddScoped(typeof(PanicBot))
                 .Configure<List<Group>>(configuration.GetSection("Groups"));
 
-            //var serviceProvider = connection.BuildServiceProvider();
-
-            //var panicBot = serviceProvider
-            //     .GetService<IOptions<List<Group>>>().Value;
-
+            connection.AddHttpClient("common");
             return connection;
         }
     }

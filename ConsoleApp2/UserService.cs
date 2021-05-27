@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -17,9 +18,16 @@ namespace ConsoleApp2
 
         public List<long> GoodsIds { get; set; }
 
-        public string Login(IHttpClientFactory httpClientFactory)
+        public string Login(IHttpClientFactory httpClientFactory,string name)
         {
-            var client = httpClientFactory.CreateClient();
+            //var client = httpClientFactory.CreateClient(name);
+            HttpClientHandler handler = new HttpClientHandler()
+            {
+                Proxy = new WebProxy($"http://{IP}"),
+                UseProxy = true,
+            };
+
+            var client = new HttpClient(handler);
             var user = new { name = UserInfo.Name, password = UserInfo.Password };
 
             HttpContent httpContent = new StringContent(JsonConvert.SerializeObject(user));
