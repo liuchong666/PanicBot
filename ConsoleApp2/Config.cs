@@ -19,7 +19,6 @@ namespace ConsoleApp2
             build.AddJsonFile("config.json", true, true);
             var config = build.Build();
             configuration = config;
-            //ConfigModel.MinuteValue = int.Parse(config["MinuteValue"]);
         }
 
         public static IServiceCollection ServiceInit()

@@ -42,11 +42,11 @@ namespace ConsoleApp2
 
             var proxyUrl = "http://api2.uuhttp.com:39002/index/api/return_data?mode=http&count=10&return_type=2&line_break=6&secert=MTM4MTM5MDA1NTI6NTdiYTE3MmE2YmUxMjVjY2EyZjQ0OTgyNmY5OTgwY2E=";
             var client = httpClientFactory.CreateClient("common");
-            
-            
+
+
 
             List<string> listip = new List<string>();
-            while (listip.Count<us.Count+2)
+            while (listip.Count < us.Count + 2)
             {
                 var ipStr = client.GetAsync(proxyUrl).Result.Content.ReadAsStringAsync().Result;
                 var resultIPs = JsonConvert.DeserializeObject<dynamic>(ipStr);
@@ -62,7 +62,7 @@ namespace ConsoleApp2
                             UseProxy = true,
                         };
 
-                       var client1 = new HttpClient(handler);
+                        var client1 = new HttpClient(handler);
                         client1.Timeout = TimeSpan.FromMilliseconds(300);
 
                         var watch = new Stopwatch();
