@@ -1,6 +1,7 @@
 {
   "Groups": [
     {
+      "GroupId": 1,
       "DlowP": 8500,
       "DupP": 9500,
       "Users": [
@@ -15,6 +16,7 @@
       ]
     },
     {
+      "GroupId": 2,
       "DlowP": 10000,
       "DupP": 12000,
       "Users": [
