@@ -46,25 +46,25 @@ namespace ConsoleApp2
                 us.Add(u);
             }
 
-            while (true)
-            {
-                if ((DateTime.Now.Hour == 10 || DateTime.Now.Hour == 14) && DateTime.Now.Minute > 45)
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine($"程序等待中，在10点或14点46分用户将登录{DateTime.Now}\r\n");
-                    if ((DateTime.Now.Hour == 10 || DateTime.Now.Hour == 14) && DateTime.Now.Minute >= 40)
-                    {
-                        Thread.Sleep(60 * 1000);
-                    }
-                    else
-                    {
-                        Thread.Sleep(60 * 1000 * 5);
-                    }
-                }
-            }
+            //while (true)
+            //{
+            //    if ((DateTime.Now.Hour == 10 || DateTime.Now.Hour == 14) && DateTime.Now.Minute > 45)
+            //    {
+            //        break;
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine($"程序等待中，在10点或14点46分用户将登录{DateTime.Now}\r\n");
+            //        if ((DateTime.Now.Hour == 10 || DateTime.Now.Hour == 14) && DateTime.Now.Minute >= 40)
+            //        {
+            //            Thread.Sleep(60 * 1000);
+            //        }
+            //        else
+            //        {
+            //            Thread.Sleep(60 * 1000 * 5);
+            //        }
+            //    }
+            //}
 
             var proxyUrl = "http://api2.uuhttp.com:39002/index/api/return_data?mode=http&count=10&return_type=2&line_break=6&secert=MTM4MTM5MDA1NTI6NTdiYTE3MmE2YmUxMjVjY2EyZjQ0OTgyNmY5OTgwY2E=";
             var client = httpClientFactory.CreateClient("common");
@@ -129,7 +129,7 @@ namespace ConsoleApp2
                 Console.WriteLine($"登录成功用户数：{us.Where(c => !string.IsNullOrEmpty(c.Token)).Count()}");
             }
 
-            WaitForGetAllGoods();
+            //WaitForGetAllGoods();
             //获取去商品列表
             int sessionId = us[0].GetSessionList(httpClientFactory);
             List<Goods> goods = new List<Goods>();
@@ -169,19 +169,19 @@ namespace ConsoleApp2
                 }
             }
 
-            while (true)
-            {
-                int hour = DateTime.Now.Hour;
-                int minute = DateTime.Now.Minute;
-                int second = DateTime.Now.Second;
-                if ((hour == 10 || hour == 14) && minute > 55 && second > 58)
-                {
-                    break;
-                }
+            //while (true)
+            //{
+            //    int hour = DateTime.Now.Hour;
+            //    int minute = DateTime.Now.Minute;
+            //    int second = DateTime.Now.Second;
+            //    if ((hour == 10 || hour == 14) && minute > 55 && second > 58)
+            //    {
+            //        break;
+            //    }
 
-                Console.WriteLine($"当前时间为 {hour}时{minute}分{second}秒, 在{hour}:56:59开启抢购商品!\r\n");
-                Thread.Sleep(1000);
-            }
+            //    Console.WriteLine($"当前时间为 {hour}时{minute}分{second}秒, 在{hour}:56:59开启抢购商品!\r\n");
+            //    Thread.Sleep(1000);
+            //}
 
             var result1 = Parallel.ForEach(us, async u =>
             {

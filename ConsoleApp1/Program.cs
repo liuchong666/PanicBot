@@ -95,7 +95,7 @@ namespace ConsoleApp1
                 {
                     logger.Info($"用户：{user.Name}抢购商品：{allGoods.Item1[i].GoodName}失败,原因：{result.Item2}");
                     Console.WriteLine($"抢购失败：{result.Item2}\r\n");
-                    if (result.Item2 != "未开场")
+                    if (result.Item2 != "未开场"&&result.Item2!= "请求超时")
                     {
                         allGoods.Item1.RemoveAt(i);
                         i = random.Next(0, allGoods.Item1.Count);

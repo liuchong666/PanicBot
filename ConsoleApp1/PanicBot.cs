@@ -175,24 +175,33 @@ namespace ConsoleApp1
 
         public (bool, string) DoOrder(string token, long goodsId)
         {
-            var client = _httpClientFactory.CreateClient();
-            client.DefaultRequestHeaders.Add("Authorization", token);
-            var resultAuth = client.GetAsync($"http://api.muyunzhaig.com/order/createOrder/{goodsId}?null").Result;
-            if (resultAuth.StatusCode != System.Net.HttpStatusCode.OK)
+            try
             {
-                _logger.LogError(resultAuth.Content.ReadAsStringAsync().Result);
-                Console.WriteLine($"下单请求失败{resultAuth.StatusCode}\r\n");
-            }
+                var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Add("Authorization", token);
+                client.Timeout = TimeSpan.FromMilliseconds(800);
+                var resultAuth = client.GetAsync($"http://api.muyunzhaig.com/order/createOrder/{goodsId}?null").Result;
+                if (resultAuth.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    _logger.LogError(resultAuth.Content.ReadAsStringAsync().Result);
+                    Console.WriteLine($"下单请求失败{resultAuth.StatusCode}\r\n");
+                }
 
-            var resultStr = resultAuth.Content.ReadAsStringAsync().Result;
-            var result = JsonConvert.DeserializeObject<dynamic>(resultStr);
-            if (result.code == 0)
+                var resultStr = resultAuth.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<dynamic>(resultStr);
+                if (result.code == 0)
+                {
+                    Console.WriteLine($"抢购成功\r\n");
+                    return (true, "");
+                }
+
+                return (false, result.message.Value);
+            }
+            catch (Exception ex)
             {
-                Console.WriteLine($"抢购成功\r\n");
-                return (true, "");
-            }
 
-            return (false, result.message.Value);
+                return(false,"请求超时");
+            }
         }
     }
 }
